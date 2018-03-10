@@ -1,0 +1,2 @@
+# indoor-navigation-blinds
+KhalsaGuide - an indoor navigation android application for blinds based on bluetooth BLE beacons. As soon as the app is launched, it turns on the mobile bluetooth in search mode. As soon as a new device is found, it checks its MAC address and sees if it is one of the devices stored in the database. If yes, it then maps a path to the destination provided by the user and guides him/her with directions using voice commands
