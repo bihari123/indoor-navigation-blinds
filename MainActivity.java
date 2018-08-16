@@ -1,4 +1,6 @@
-package com.example.administrator.khalsaguide;
+package com.example.ips.khalsaguide_indoornavigationsystemforblinds;
+
+
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     public int[] acol = new int[30];
 
     public Beacon[][] a = new Beacon[9][15];
+    private Boolean exit = false;
 
 
 
@@ -244,6 +247,8 @@ public class MainActivity extends AppCompatActivity {
                 destination = "27+28";
             } else if (destination.equals("Room 29")) {
                 destination = "29";
+            }else if (destination.equals("Room 23")){
+                destination = "23+st+wr2";
             }
             startBluetooth();
         }
@@ -330,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (path[g].equals("8+9") ) {
                         path[g] = "Room 8,9";
                     } else if (path[g].equals("gcr+cl4+st4") ) {
-                        path[g] = "Girls COmmon Room";
+                        path[g] = "Girls Common Room";
                     } else if (path[g].equals("edp+st+wr1")) {
                         path[g] = "EDP Room";
                     } else if (path[g].equals("17 20 elecLab") ) {
@@ -342,6 +347,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else if(path[g].equals("23+st+wr2")){
                         path[g]="Room 23";
+                    }else if(path[g].equals("c1") || path[g].equals("c3") || path[g].equals("c4") || path[g].equals("c5") || path[g].equals("c6")){
+                        path[g]="Corridor";
+                    }else if(path[g].equals("c2")){
+                        path[g]="Jannat";
                     }
                 }
                 break;
@@ -570,32 +579,32 @@ public class MainActivity extends AppCompatActivity {
                 String address = device.getAddress();
 
                 // for identifying source
-                 if (!broad) {
+                if (!broad) {
 
 
-                        for (i = 0; i <= 8; i++) {
-                            for (j = 0; j <= 13; j++) {
-                                if (uuid[i][j] != null) {
-                                    if (uuid[i][j].equals(address)) {
+                    for (i = 0; i <= 8; i++) {
+                        for (j = 0; j <= 13; j++) {
+                            if (uuid[i][j] != null) {
+                                if (uuid[i][j].equals(address)) {
 
-                                        source = keys[i][j];
-                                        showToast("Source Detected " + "\n Calculating Path");
-                                        assignAdd();
-                                        if (asn) {
-                                            search(source, destination);
-                                            //  foundSource = true;
-                                            broad = true;
-                                        }
+                                    source = keys[i][j];
+                                    showToast("Source Detected " + "\n Calculating Path");
+                                    assignAdd();
+                                    if (asn) {
+                                        search(source, destination);
+                                        broad = true;
+
                                     }
-                                }
-                                if (broad) {
-                                    break;
                                 }
                             }
                             if (broad) {
                                 break;
                             }
                         }
+                        if (broad) {
+                            break;
+                        }
+                    }
 
                 }
 
@@ -603,42 +612,42 @@ public class MainActivity extends AppCompatActivity {
                 else {
 
                     if (address.equals(bt_add[r])) {
-                        if(r<k) {
-                            if (path[r] == (path[r + 1])) {
-                                if(r!=0) {
-                                    if (dir[r] != "Forward") {
-                                        showToast("You are at " + path[r] + "\n   Move   " + dir[r] + "\n towards   " + path[r + 2]);
-                                        r += 2;
-                                    } else if (dir[r + 1] != "Forward") {
-                                        r += 1;
-                                        showToast("You are at " + path[r] + "\n   Move   " + dir[r] + "\ntowards   " + path[r + 1]);
-                                        r += 1;
-                                    } else if (dir[r] == "Forward" && dir[r + 1] == "Forward") {
-                                        showToast("You are at " + path[r] + " \n  Move   " + dir[r] + " \ntowards   " + path[r + 2]);
+                         if ((Math.abs(p2.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE)) <= 88) ||  (bt_add[r] == "2C:00:00:01:AA:BE" && Math.abs(p2.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE)) <= 96 && path[r-1] != "Girls Common Room")) {
+                            if (r < k) {
+                                if (path[r] == (path[r + 1])) {
+                                    if (r != 0) {
+                                        if (dir[r] != "Forward") {
+                                            showToast("You are at " + path[r] + "\n   Move   " + dir[r] + "\n towards   " + path[r + 2]);
+                                            r += 2;
+                                        } else if (dir[r + 1] != "Forward") {
+                                            r += 1;
+                                            showToast("You are at " + path[r] + "\n   Move   " + dir[r] + "\ntowards   " + path[r + 1]);
+                                            r += 1;
+                                        } else if (dir[r] == "Forward" && dir[r + 1] == "Forward") {
+                                            showToast("You are at " + path[r] + " \n  Move   " + dir[r] + " \ntowards   " + path[r + 2]);
+                                            r += 2;
+                                        }
+                                    } else {
+                                        showToast("You are at " + path[r] + "\n   Move   " + dir[r] + " \ntowards   " + path[r + 2]);
                                         r += 2;
                                     }
+                                } else {
+                                    showToast("You are at " + path[r] + "\n   Move   " + dir[r] + " \ntowards   " + path[r + 1]);
+                                    r += 1;
                                 }
 
-                                else{
-                                    showToast("You are at " + path[r] + "\n   Move   " + dir[r] + " \ntowards   " + path[r + 2]);
-                                    r += 2;
-                                }
-                            }
-                            else {
-                                showToast("You are at " + path[r] + "\n   Move   " + dir[r] + " \ntowards   " + path[r + 1]);
+
+                            } else {
+                                showToast(" you have reached " + path[k]);
+                                showToast(" you have reached " + path[k]);
+                                showToast(" you have reached " + path[k]);
                                 r += 1;
+
                             }
-
-
-                        } else {
-                            showToast(" you have reached "+ path[k]);
-                            showToast(" you have reached "+ path[k]);
-                            showToast(" you have reached "+ path[k]);
-                            r += 1;
                         }
+
+
                     }
-
-
                 }
             }
             // for keeping the bluetooth in permanent ON state
@@ -651,6 +660,26 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+    @Override
+    public void onBackPressed(){
+
+        if (exit) {
+            bt.cancelDiscovery();
+            bt.disable();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
+            startActivity(intent);
+            finish(); // finish activity
+            System.exit(0);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -660,6 +689,8 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(myReciever);
     }
 }
+
+
 
 
 
